@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## React Starter Kit — "isomorphic" web app boilerplate
 
 [![Support us on Bountysource](https://dl.dropboxusercontent.com/u/16006521/react-starter-kit/banner.png)](https://salt.bountysource.com/teams/react-starter-kit)<br>
@@ -163,3 +164,7 @@ file. The documentation to the project is licensed under the
 
 ---
 Made with ♥ by Konstantin Tarkus ([@koistya](https://twitter.com/koistya)) and [contributors](https://github.com/kriasoft/react-starter-kit/graphs/contributors)
+=======
+# dddhackaton
+DDD Hacakton repo
+>>>>>>> b27d71532aef8a8a706a6ec24a7c6e1d92978842
