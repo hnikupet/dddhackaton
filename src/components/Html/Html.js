@@ -39,6 +39,9 @@ class Html extends Component {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="apple-touch-icon" href="apple-touch-icon.png" />
         <style id="css" dangerouslySetInnerHTML={{__html: this.props.css}} />
+        <link rel="stylesheet" type="text/css" href="/js/leaflet-0.7.5/leaflet.css" />
+        <script src="/js/leaflet-0.7.5/leaflet.js"></script>
+        
       </head>
       <body>
         <div id="app" dangerouslySetInnerHTML={{__html: this.props.body}} />

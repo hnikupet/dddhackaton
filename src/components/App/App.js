@@ -5,6 +5,7 @@ import styles from './App.css';
 import withContext from '../../decorators/withContext';
 import withStyles from '../../decorators/withStyles';
 import Header from '../Header';
+import MapContainer from '../MapContainer';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
 
@@ -21,6 +22,7 @@ class App extends Component {
     return !this.props.error ? (
       <div>
         <Header />
+        <MapContainer />
         {this.props.children}
         <Feedback />
         <Footer />
