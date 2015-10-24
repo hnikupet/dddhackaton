@@ -14,13 +14,13 @@ class Header extends Component {
       <div className="Header">
         <div className="Header-container">
           <a className="Header-brand" href="/" onClick={Link.handleClick}>
-            <img className="Header-brandImg" src={require('./logo-small.png')} width="38" height="38" alt="React" />
-            <span className="Header-brandTxt">SkenarioLabs</span>
+            <img className="Header-brandImg" src={require('./skenarios-logo.png')} height="60" alt="React" />
+            <span className="Header-brandTxt"></span>
           </a>
           <Navigation className="Header-nav" />
           <div className="Header-banner">
-            <h1 className="Header-bannerTitle">Skenarios</h1>
-            <p className="Header-bannerDesc">Property Risk Management Made Easy</p>
+            <h1 className="Header-bannerTitle">The Hub</h1>
+            <p className="Header-bannerDesc">Property Risk Management for Dummies</p>
           </div>
         </div>
       </div>
