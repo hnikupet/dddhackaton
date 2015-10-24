@@ -1,10 +1,11 @@
 class Risk {
-  constructor(buildingAge) {
+
+  constructor(buildYear) {
     this.buildingAge = buildingAge;
     this.risks = {
       brickFacade:{life:40,riskLevel:0.15,severity:7},
       secondaryStructuralSteelwork:{life:60,riskLevel:0.05,severity:8},
-      doorAndWindowFraming{:life:25,riskLevel:0.25,severity:1},
+      doorAndWindowFraming:{life:25,riskLevel:0.25,severity:1},
       loadBearingMasonry:{life:60,riskLevel:0.2,severity:8},
       nonloadBearingConcreteWalls:{life:60,riskLevel:0.2,severity:5},
       fireInsulation:{life:60,riskLevel:0.12,severity:8},
@@ -14,8 +15,15 @@ class Risk {
     };
   }
   
-  getProbability(year) {
-    return 'foo'
+  getProbability(buildYear = risk) {
+    var r = this.risks[risk];
+    var lvl = 0;
+
+    if ((2015-r.life) > this.buildYear) {
+      lvl = (2015-r.life-this.buildYear) * r.riskLevel;
+    } 
+
+    return lvl;
   }
 
 }

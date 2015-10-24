@@ -3,6 +3,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jQuery';
+import Risk from './Risk';
 import styles from './MapContainer.css';
 import withStyles from '../../decorators/withStyles';
 
@@ -61,9 +62,10 @@ class MapContainer extends Component {
 	    return [Math.floor(r * 255), Math.floor(g * 255), Math.floor(b * 255)];
 	}
 
-	let numberToColorHsl = function (i) {
+	let numberToColorHsl = function (risk) {
 	    // as the function expects a value between 0 and 1, and red = 0° and green = 120°
 	    // we convert the input to the appropriate hue value
+	    var i = 100 - (risk * 10);
 	    var hue = i * 1.2 / 360;
 	    // we convert hsl to rgb (saturation 100%, lightness 50%)
 	    var rgb = hslToRgb(hue, 1, .5);
@@ -71,21 +73,45 @@ class MapContainer extends Component {
 	    return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')'; 
 	}
 
+	var risks = {
+      brickFacade:{life:40,riskLevel:0.15,severity:7},
+      secondaryStructuralSteelwork:{life:60,riskLevel:0.05,severity:8},
+      doorAndWindowFraming:{life:25,riskLevel:0.25,severity:1},
+      loadBearingMasonry:{life:60,riskLevel:0.2,severity:8},
+      nonloadBearingConcreteWalls:{life:60,riskLevel:0.2,severity:5},
+      fireInsulation:{life:60,riskLevel:0.12,severity:8},
+      tileRoof:{life:45,riskLevel:0.12,severity:5},
+      heatingPipes:{life:50,riskLevel:0.15,severity:5},
+      sewerPipes:{life:50,riskLevel:0.2,severity:5},
+    };
+
+
+    var getRisk = function (buildYear,risk) {
+	    var r = risks[risk];
+	    var lvl = 0;
+	    if ((2015-r.life) > buildYear) {
+	      lvl = (2015-r.life-buildYear) * r.riskLevel;
+	    } 
+	    if (lvl < 0)
+	    	lvl = 0;
+
+	    if (lvl > 5)
+	    	lvl = 5;
+
+	    var totalRisk = lvl * r.severity / 4;
+
+	    return {riskLevel:lvl,totalRisk:totalRisk};
+  	}
+ 
+
+
 	let bindLayerPopup = function (feature, layer) {
-	    layer.bindPopup('Build Year:'+feature.properties.start_date+'<br />Risk:'+calculateRisk(feature,layer));
+	    layer.bindPopup('Repair Year: '+feature.properties.start_date+'<br />Risk: '+calculateRisk(feature,layer).toFixed(2)+' / 10');
 	}
 
 	let calculateRisk = function(feature, layer) {
-		let age = 2015 - feature.properties.start_date;
-		let risk = 100 - age;
-
-		if (risk > 100)
-			risk = 100;
-
-		if (risk < 0)
-			risk = 0;
-
-		return risk;
+		var risk = getRisk(feature.properties.start_date,'brickFacade');
+		return risk.totalRisk;
 	}
 
 	let layerStyle = function (feature, layer) {
