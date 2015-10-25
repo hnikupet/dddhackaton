@@ -25,6 +25,35 @@ onYearChange() {
   	this.setState({year:tmp})
 }
 
+getPopup(feature, riskLevel, risks, getRepairYear) {
+
+	let buildingName = 'Building '+feature.properties.Id;
+	if (feature.properties.Addr_stree != null) {
+		buildingName = feature.properties.Addr_stree;
+		if (feature.properties.Addr_house) {
+			buildingName = buildingName+' '+feature.properties.Addr_house;
+		}
+	} 
+
+	var repairYear = getRepairYear(feature);
+
+	let txt = '<h2>'+buildingName+'</h2>Build Year: '+feature.properties.Start_date+'<br />Repaired: '+repairYear+'<br />Risk: '+riskLevel.toFixed(2)+' / 10';
+	txt = txt + '<h2>Maintenance plan</h2>';
+	txt = txt + '<table>';	
+	txt = txt + '<tr><th>Facade</th><td>'+(parseInt(repairYear) + parseInt(risks.brickFacade.life)+'</td></tr>');
+	txt = txt + '<tr><th>Steel Work</th><td>'+(parseInt(repairYear) + parseInt(risks.secondaryStructuralSteelwork.life)+'</td></tr>');
+	txt = txt + '<tr><th>Door & Window Framing</th><td>'+(parseInt(repairYear) + parseInt(risks.doorAndWindowFraming.life)+'</td></tr>');
+	txt = txt + '<tr><th>Load Bearing Masorny</th><td>'+(parseInt(repairYear) + parseInt(risks.loadBearingMasonry.life)+'</td></tr>');
+	txt = txt + '<tr><th>Non Load Bearing Masorny</th><td>'+(parseInt(repairYear) + parseInt(risks.nonloadBearingConcreteWalls.life)+'</td></tr>');
+	txt = txt + '<tr><th>Fire Insulation</th><td>'+(parseInt(repairYear) + parseInt(risks.fireInsulation.life)+'</td></tr>');
+	txt = txt + '<tr><th>Tile Roof</th><td>'+(parseInt(repairYear) + parseInt(risks.tileRoof.life)+'</td></tr>');
+	txt = txt + '<tr><th>Heating Pipes</th><td>'+(parseInt(repairYear) + parseInt(risks.heatingPipes.life)+'</td></tr>');
+	txt = txt + '<tr><th>Sewer Pipes</th><td>'+(parseInt(repairYear) + parseInt(risks.sewerPipes.life)+'</td></tr>');
+	txt = txt + '</table>';	
+	
+	return txt;
+}
+
 componentDidMount() {
 
 
@@ -117,26 +146,17 @@ componentDidMount() {
 	    return {riskLevel:lvl,totalRisk:totalRisk};
   	}
  
+ 	let that = this;
 
 
 	let bindLayerPopup = function (feature, layer) {
-		console.log(feature.properties);
-		let buildingName = 'Building '+feature.properties.Id;
-		if (feature.properties.Addr_stree != null) {
-			buildingName = feature.properties.Addr_stree;
-			if (feature.properties.Addr_house) {
-				buildingName = buildingName+' '+feature.properties.Addr_house;
-			}
-		} 
-		var repairDate = '';
-		if (feature.properties.Job_date != null) {
-			repairDate = feature.properties.Job_date.substring(6,10);
-		}
 
-	    layer.bindPopup('<h2>'+buildingName+'</h2>Build Year: '+feature.properties.Start_date+'<br />Repaired: '+repairDate+'<br />Risk: '+calculateRisk(feature,layer).toFixed(2)+' / 10');
+		var riskLevel = calculateRisk(feature,layer);
+		var txt = that.getPopup(feature,riskLevel,risks,getRepairYear);
+	    layer.bindPopup(txt);
 	}
 
-	let calculateRisk = function(feature, layer) {
+	let getRepairYear = function(feature) {
 		var repairYear = null;
 		if (feature.properties.Job_date != null) {
 			repairYear = feature.properties.Job_date.substring(6,10);
@@ -151,7 +171,12 @@ componentDidMount() {
 		} else {
 			repairYear = 2000;
 		}
+		return repairYear;
+	}
 
+	let calculateRisk = function(feature, layer) {
+
+		var repairYear = getRepairYear(feature);
 		var risk = getRisk(repairYear,'brickFacade');
 		return risk.totalRisk;
 	}

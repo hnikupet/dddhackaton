@@ -23,8 +23,8 @@ class App extends Component {
       <div>
         <Header />
         <MapContainer />
-        {this.props.children}
-        <PropertyDetails />
+        {/*  {this.props.children}
+        <PropertyDetails />*/}
         <Feedback />
         <Footer />
       </div>
