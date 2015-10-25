@@ -195,7 +195,7 @@ componentDidMount() {
 	}
 
 
-	$.getJSON('/buildingData.json', function(data) {
+	$.getJSON('/buildingdata.json', function(data) {
 		that.buildingLayers = L.geoJson(data,{onEachFeature:bindLayerPopup, style:that.layerStyle.bind(that)}).addTo(map);
 	});  
 
