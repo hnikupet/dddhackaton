@@ -19,8 +19,8 @@ class Risk {
     var r = this.risks[risk];
     var lvl = 0;
 
-    if ((2015-r.life) > this.buildYear) {
-      lvl = (2015-r.life-this.buildYear) * r.riskLevel;
+    if ((2015-r.life) > buildYear) {
+      lvl = (2015-r.life-buildYear) * r.riskLevel;
     } 
 
     return lvl;

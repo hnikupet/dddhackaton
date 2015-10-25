@@ -2,15 +2,30 @@
 
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jQuery';
+import $ from 'jquery';
 import Risk from './Risk';
 import styles from './MapContainer.css';
 import withStyles from '../../decorators/withStyles';
 
 @withStyles(styles)
 class MapContainer extends Component {
+  
 
-  componentDidMount() {
+constructor(props) {
+    super(props);
+    this.state = {year: props.year};
+}
+
+static defaultState = {
+    year: 2015,
+};
+
+onYearChange() {
+  	var tmp = ReactDOM.findDOMNode(this.refs.year).value.trim();
+  	this.setState({year:tmp})
+}
+
+componentDidMount() {
 
 
 	var map = this.map = L.map(ReactDOM.findDOMNode(this.refs.map), {
@@ -85,7 +100,6 @@ class MapContainer extends Component {
       sewerPipes:{life:50,riskLevel:0.2,severity:5},
     };
 
-
     var getRisk = function (buildYear,risk) {
 	    var r = risks[risk];
 	    var lvl = 0;
@@ -128,14 +142,17 @@ class MapContainer extends Component {
   }
 
   render() {
-    console.log('map container');
-    
+    console.log('map container',this.state);
+    var method = this.onYearChange.bind(this);
     return (
 	    <div className="row">
 	        <div className="col-sm-4 mapcontainer" id="map" ref="map"></div>
-	        <div id="sidebar">
-	         
-	        </div>
+	        <div>
+        		<h1 className="middleDiv" >
+        			<span>Year </span>
+        			<input type="number" onChange={method} size="4" defaultValue="2015" min="2010" max="2050" value={this.state.year} id="year" ref="year" className="form-control"/>
+	    		</h1>
+	    	</div>
 	    </div>
     );
   }
