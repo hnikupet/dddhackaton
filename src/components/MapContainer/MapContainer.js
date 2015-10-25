@@ -230,11 +230,11 @@ componentDidMount() {
 	var floodLayer;
 
 	//fetch flood data total flood or only the buildings that intersect the floods.
-	$.getJSON('http://localhost:8080/hack/flood?pagesize=1000', function(data) {
-		data._embedded['rh:doc'].forEach(function(d){
+	$.getJSON('floods.json', function(data) {
+		/*data._embedded['rh:doc'].forEach(function(d){
 			geoJsonFlood.features.push(d.flood);
-		});
-		floodLayer = L.geoJson(geoJsonFlood,{onEachFeature:floodbindLayerPopup, style:floodStyle})
+		});*/
+		floodLayer = L.geoJson(data,{onEachFeature:floodbindLayerPopup, style:floodStyle})
 		var overlayMaps = {"Flood": floodLayer};
 		L.control.layers(null, overlayMaps).addTo(map);	
 	});
