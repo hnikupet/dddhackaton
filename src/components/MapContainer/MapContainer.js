@@ -120,11 +120,39 @@ componentDidMount() {
 
 
 	let bindLayerPopup = function (feature, layer) {
-	    layer.bindPopup('Repair Year: '+feature.properties.start_date+'<br />Risk: '+calculateRisk(feature,layer).toFixed(2)+' / 10');
+		console.log(feature.properties);
+		let buildingName = 'Building '+feature.properties.Id;
+		if (feature.properties.Addr_stree != null) {
+			buildingName = feature.properties.Addr_stree;
+			if (feature.properties.Addr_house) {
+				buildingName = buildingName+' '+feature.properties.Addr_house;
+			}
+		} 
+		var repairDate = '';
+		if (feature.properties.Job_date != null) {
+			repairDate = feature.properties.Job_date.substring(6,10);
+		}
+
+	    layer.bindPopup('<h2>'+buildingName+'</h2>Build Year: '+feature.properties.Start_date+'<br />Repaired: '+repairDate+'<br />Risk: '+calculateRisk(feature,layer).toFixed(2)+' / 10');
 	}
 
 	let calculateRisk = function(feature, layer) {
-		var risk = getRisk(feature.properties.start_date,'brickFacade');
+		var repairYear = null;
+		if (feature.properties.Job_date != null) {
+			repairYear = feature.properties.Job_date.substring(6,10);
+		} 
+
+		if (repairYear == null && feature.properties.Start_date != null) {
+			if (feature.properties.Start_date < 1950) {
+				repairYear = 1950;
+			} else {
+				repairYear = feature.properties.Start_date;
+			}
+		} else {
+			repairYear = 2000;
+		}
+
+		var risk = getRisk(repairYear,'brickFacade');
 		return risk.totalRisk;
 	}
 
@@ -132,11 +160,8 @@ componentDidMount() {
 		return {color: numberToColorHsl(calculateRisk(feature, layer))}
 	}
 
-	$.getJSON('http://localhost:8080/hack/places?pagesize=1000', function(data) {
-		data._embedded['rh:doc'].forEach(function(d){
-			geoJsonData.features.push(d.build);
-		});
-		L.geoJson(geoJsonData,{onEachFeature:bindLayerPopup, style:layerStyle}).addTo(map);
+	$.getJSON('/buildingData.json', function(data) {
+		L.geoJson(data,{onEachFeature:bindLayerPopup, style:layerStyle}).addTo(map);
 
 	});  
   }
